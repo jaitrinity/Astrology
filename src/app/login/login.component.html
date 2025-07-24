@@ -1,0 +1,51 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Astrologer Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="isLogin">
+      <!-- <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter email" />
+        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
+          Valid email is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" formControlName="password" placeholder="Enter password" />
+        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
+          Password is required.
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <label>Mobile *</label>
+        <input type="text" formControlName="mobile" placeholder="Enter mobile" />
+        <div *ngIf="loginForm.get('mobile')?.touched && loginForm.get('mobile')?.invalid" class="error">
+          Mobile is required with 10 digit number.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid">Get OTP</button>
+    </form>
+
+    <form [formGroup]="otpForm" (ngSubmit)="validateOTP()" *ngIf="!isLogin">
+      <div class="form-group">
+        <label>OTP *</label>
+        <input type="text" formControlName="otp" placeholder="Enter 4 digit OTP" />
+        <div *ngIf="otpForm.get('otp')?.touched && otpForm.get('otp')?.invalid" class="error">
+          OTP with 4 digit number.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="otpForm.invalid">Validate OTP</button>
+      <br><br>
+      <button type="button" (click)="resendOTP()" [disabled]="timeLeft != 60">
+        Resend OTP to : {{loginForm.value.mobile}}
+        <span *ngIf="timeLeft != 60">: {{timeLeft}}s</span>
+      </button>
+      <br><br>
+      <a href="javascript:void(0)" (click)="isLogin = !isLogin;pauseTimer()">Change Number</a>
+    </form>
+  </div>
+</div>

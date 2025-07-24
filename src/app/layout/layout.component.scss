@@ -1,0 +1,9 @@
+.main-content {
+  margin-left: 220px;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+app-sidebar.collapsed ~ .main-content {
+  margin-left: 60px;
+}

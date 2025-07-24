@@ -1,0 +1,15 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="toggle-btn" (click)="toggleSidebar()">
+    ☰
+  </div>
+  <nav style="height: 450px;">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <!-- <a routerLink="/horoscope" routerLinkActive="active">Horoscope</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+    <a routerLink="/settings" routerLinkActive="active">Settings</a> -->
+  </nav>
+  <nav>
+    <a (click)="logout()">Welcome : {{mobile}} Logout</a>
+  </nav>
+  
+</div>

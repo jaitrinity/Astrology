@@ -1,0 +1,429 @@
+<div class="row">
+    <div class="col-md-3">
+        <mat-form-field>
+            <mat-label>Year *</mat-label>
+            <mat-select [(ngModel)]="year">
+                <mat-option [value]="y" *ngFor="let y of yearList">{{y}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Month *</mat-label>
+            <mat-select [(ngModel)]="month">
+                <mat-option [value]="m.number" *ngFor="let m of monthList">{{m.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Date *</mat-label>
+            <mat-select [(ngModel)]="date">
+                <mat-option [value]="d" *ngFor="let d of dateList">{{d}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Hours *</mat-label>
+            <mat-select [(ngModel)]="hours">
+                <mat-option [value]="h" *ngFor="let h of hoursList">{{h}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Minutes *</mat-label>
+            <mat-select [(ngModel)]="minutes">
+                <mat-option [value]="mi" *ngFor="let mi of minutesList">{{mi}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Seconds *</mat-label>
+            <mat-select [(ngModel)]="seconds">
+                <mat-option [value]="se" *ngFor="let se of secondsList">{{se}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <!-- <mat-form-field >
+            <mat-label>Location *</mat-label>
+             <mat-select [(ngModel)]="location" (selectionChange)="getLocation()">
+                <mat-option value="">Location</mat-option>
+                <mat-option [value]="l.locName" *ngFor="let l of locationList">{{l.locName}}</mat-option>
+            </mat-select>
+        </mat-form-field> -->
+        <mat-form-field >
+            <mat-label>Location *</mat-label>
+            <input matInput list="allLocations" class="form-control" [(ngModel)]="location" (change)="getLocation()" />
+            <datalist id="allLocations">
+                <option [value]="l.locName" *ngFor="let l of locationList">{{l.locName}}</option>
+            </datalist>
+        </mat-form-field>
+        
+    </div>
+    <div class="col-md-3" *ngIf="locationResult.length !=0">
+        <mat-form-field >
+            <mat-label>Select Location *</mat-label>
+            <mat-select [(ngModel)]="selectedLocation" (selectionChange)="changeLocation($event)">
+                <mat-option value="">Select Location</mat-option>
+                <mat-option value="{{l.latitude}} -- {{l.longitude}} -- {{l.timezone_offset}}" *ngFor="let l of locationResult">{{l.location_name}} - {{l.country}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Latitude *</mat-label>
+            <input matInput [(ngModel)]="latitude" placeholder="latitude" readonly>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Longitude *</mat-label>
+            <input matInput [(ngModel)]="longitude" placeholder="longitude" readonly>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field >
+            <mat-label>Timezone *</mat-label>
+            <input matInput [(ngModel)]="timezone" placeholder="timezone" readonly>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <button mat-raised-button color="primary" (click)="submit()">
+            Submit
+        </button>
+    </div>
+</div>
+<div class="row" *ngIf="inProgress">
+    <div class="col-md-12">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <mat-tab-group mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
+            <mat-tab label="Planet">
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered my-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Full Degree</th>
+                                    <th>Norm Degree</th>
+                                    <th>DMS</th>
+                                    <th>Is Retro</th>
+                                    <th>Current sign</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let po of planetOutput; let i=index">
+                                    <td> <button mat-stroked-button color="primary" (click)="showPlanetsExtended(po.name)">{{po.name}}</button></td>
+                                    <td>{{po.fullDegree | number:'1.2-2'}}</td>
+                                    <td>{{po.normDegree | number:'1.2-2'}}</td>
+                                    <td>{{toDMS(po.normDegree)}}</td>
+                                    <td>{{po.isRetro}}</td>
+                                    <td>{{po.current_sign}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Maha Dasas">
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered my-table">
+                            <thead>
+                                <tr>
+                                    <th>Lord</th>
+                                    <th>Start time</th>
+                                    <th>End time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let m of mahaDasas; let i=index">
+                                    <td> <button mat-stroked-button color="primary" (click)="showAntarDasas(m.lord)">{{m.lord}}</button></td>
+                                    <td>{{m.start_time | date:'dd-MMM-yyyy'}}</td>
+                                    <td>{{m.end_time | date:'dd-MMM-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Charts">
+                <br>
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-label>Chart type</mat-label>
+                            <mat-select [(ngModel)]="chartType" (selectionChange)="getAllCharts()">
+                                <mat-option value="north_india">North India</mat-option>
+                                <mat-option value="south_india">South India</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('horoscope-chart-svg-code')">
+                                Horoscope Chart SVG <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <div [innerHTML]="horoscopeChartSvg"></div>
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('horoscope-chart-url')">
+                                Horoscope Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="horoscopeChart" alt="Horoscope Chart loading"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('navamsa-chart-url')">
+                                Navamsa Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="navamsaChart" alt="Navamsa Chart loading">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d2-chart-url')">
+                                D2 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d2ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> -->
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d3-chart-url')">
+                                D3 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d3ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d4-chart-url')">
+                                D4 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d4ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d5-chart-url')">
+                                D5 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d5ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> -->
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d6-chart-url')">
+                                D6 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d6ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d7-chart-url')">
+                                D7 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d7ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> --> 
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d8-chart-url')">
+                                D8 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d8ChartUrl"/>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d10-chart-url')">
+                                D10 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d10ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d11-chart-url')">
+                                D11 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d11ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> --> 
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d12-chart-url')">
+                                D12 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d12ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d16-chart-url')">
+                                D16 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d16ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d20-chart-url')">
+                                D20 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d20ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> --> 
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d24-chart-url')">
+                                D24 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d24ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d27-chart-url')">
+                                D27 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d27ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d30-chart-url')">
+                                D30 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d30ChartUrl"/>
+                        </div>
+                    </div>
+                <!-- </div>
+
+                <div class="row"> --> 
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d40-chart-url')">
+                                D40 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d40ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d45-chart-url')">
+                                D45 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d45ChartUrl"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 chart-div">
+                        <div>
+                            <label for="" (click)="getAnyCharts('d60-chart-url')">
+                                D60 Chart <mat-icon color="primary">refresh</mat-icon>
+                            </label>
+                            <img [src]="d60ChartUrl"/>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+
+<app-modal
+  [title]="modalTitle"
+  [show]="showModal"
+  (close)="closeModal()"
+>
+    <div class="row" style="max-height: 400px; overflow: auto;">
+        <div class="col-md-12" *ngIf="!isModalData">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Lord</th>
+                        <th>Start time</th>
+                        <th>End time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let m of antarDashaList; let i=index">
+                        <td>{{m.name}}</td>
+                        <td>{{m.start | date:'dd-MMM-yyyy'}}</td>
+                        <td>{{m.end | date:'dd-MMM-yyyy'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-md-12" *ngIf="isModalData">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr *ngFor="let pe of planetExtendedList;">
+                        <th>{{pe.key}}</th>
+                        <td *ngIf="(pe.key == 'fullDegree' || pe.key == 'normDegree')">{{pe.value | number:'1.2-2'}}</td>
+                        <td *ngIf="(pe.key == 'seconds')">{{pe.value | number:'1.0-0'}}</td>
+                        <td *ngIf="!(pe.key == 'fullDegree' || pe.key == 'normDegree' || pe.key == 'seconds')">{{pe.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</app-modal>
+
+
+        
