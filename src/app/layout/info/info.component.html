@@ -1,4 +1,31 @@
+<div class="row" style="margin-bottom: 12px;">
+    <div class="col-md-3">
+        <mat-checkbox color="primary" [(ngModel)]="myUser"> My user</mat-checkbox>
+    </div>
+</div>
 <div class="row">
+    <div class="col-md-3" *ngIf="myUser">
+        <mat-form-field >
+            <mat-label>Name *</mat-label>
+            <mat-select [(ngModel)]="name" (selectionChange)="getUserDetails()">
+                <mat-option value="">Select</mat-option>
+                <mat-option [value]="u.Name" *ngFor="let u of userList">{{u.Name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- <mat-form-field >
+            <mat-label>Name *</mat-label>
+            <input matInput list="allUser" class="form-control" [(ngModel)]="name" (change)="getUserDetails()" />
+            <datalist id="allUser">
+                <option [value]="u.Name" *ngFor="let u of userList">{{u.Name}}</option>
+            </datalist>
+        </mat-form-field> -->
+    </div>
+    <div class="col-md-3" *ngIf="!myUser">
+        <mat-form-field >
+            <mat-label>Name *</mat-label>
+            <input matInput [(ngModel)]="name" placeholder="Name">
+        </mat-form-field>
+    </div>
     <div class="col-md-3">
         <mat-form-field>
             <mat-label>Year *</mat-label>
@@ -51,7 +78,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" *ngIf="!myUser">
         <!-- <mat-form-field >
             <mat-label>Location *</mat-label>
              <mat-select [(ngModel)]="location" (selectionChange)="getLocation()">
@@ -68,7 +95,7 @@
         </mat-form-field>
         
     </div>
-    <div class="col-md-3" *ngIf="locationResult.length !=0">
+    <div class="col-md-3" *ngIf="!myUser && locationResult.length !=0">
         <mat-form-field >
             <mat-label>Select Location *</mat-label>
             <mat-select [(ngModel)]="selectedLocation" (selectionChange)="changeLocation($event)">
@@ -77,26 +104,28 @@
             </mat-select>
         </mat-form-field>
     </div>
-</div>
-<div class="row">
+<!-- </div>
+<div class="row"> -->
     <div class="col-md-3">
         <mat-form-field >
             <mat-label>Latitude *</mat-label>
-            <input matInput [(ngModel)]="latitude" placeholder="latitude" readonly>
+            <input matInput [(ngModel)]="latitude" placeholder="latitude">
         </mat-form-field>
     </div>
     <div class="col-md-3">
         <mat-form-field >
             <mat-label>Longitude *</mat-label>
-            <input matInput [(ngModel)]="longitude" placeholder="longitude" readonly>
+            <input matInput [(ngModel)]="longitude" placeholder="longitude">
         </mat-form-field>
     </div>
     <div class="col-md-3">
         <mat-form-field >
             <mat-label>Timezone *</mat-label>
-            <input matInput [(ngModel)]="timezone" placeholder="timezone" readonly>
+            <input matInput [(ngModel)]="timezone" placeholder="timezone">
         </mat-form-field>
     </div>
+</div>
+<div class="row">
     <div class="col-md-3">
         <button mat-raised-button color="primary" (click)="submit()">
             Submit
@@ -115,7 +144,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-bordered my-table">
+                        <table class="table table-bordered my-table" style="width: max-content;">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -124,6 +153,13 @@
                                     <th>DMS</th>
                                     <th>Is Retro</th>
                                     <th>Current sign</th>
+                                    <th>House Number</th>
+                                    <th>Zodiac Sign Name</th>
+                                    <th>Zodiac Sign Lord</th>
+                                    <th>Nakshatra Number</th>
+                                    <th>Nakshatra Name</th>
+                                    <th>Nakshatra Pada</th>
+                                    <th>Nakshatra Vimsottari Lord</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -134,6 +170,13 @@
                                     <td>{{toDMS(po.normDegree)}}</td>
                                     <td>{{po.isRetro}}</td>
                                     <td>{{po.current_sign}}</td>
+                                    <td>{{po.house_number}}</td>
+                                    <td>{{po.zodiac_sign_name}}</td>
+                                    <td>{{po.zodiac_sign_lord}}</td>
+                                    <td>{{po.nakshatra_number}}</td>
+                                    <td>{{po.nakshatra_name}}</td>
+                                    <td>{{po.nakshatra_pada}}</td>
+                                    <td>{{po.nakshatra_vimsottari_lord}}</td>
                                 </tr>
                             </tbody>
                         </table>

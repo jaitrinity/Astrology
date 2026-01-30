@@ -12,12 +12,15 @@ declare var $: any;
   styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
+  myUser: boolean = false;
   mobile:any="";
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   inProgress : boolean = false;
   loaderGif: any = "assets/img/loader.gif";
   defaultImg: any = "assets/img/default.jpg";
+  userList: any = [];
+  name: any = "";
   yearList: any = [];
   monthList = [
     { number: 1, name: 'January' },
@@ -116,6 +119,7 @@ export class InfoComponent implements OnInit {
     this.timezone = -(d.getTimezoneOffset())/60;
     this.myTimezone = this.timezone;
 
+    this.getUser();
     this.getCurrentLocation();
     this.getAllLocation();
   }
@@ -127,6 +131,35 @@ export class InfoComponent implements OnInit {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
     });
+  }
+
+  getUser(){
+    let jsonData = {
+      searchType: 'user',
+      mobile: this.mobile
+    }
+    this.sharedService.getAnyData(jsonData)
+    .subscribe(
+      (results)=>{
+        this.userList = results;
+      },
+      (error)=>{
+        this.openSnackBar(error.error.message);
+      }
+    )
+  }
+
+  getUserDetails(){
+    let obj = this.userList.filter(key => key.Mobile == this.mobile && key.Name == this.name)[0];
+    // console.log(obj);
+    this.year = obj.Yearr;
+    this.month = obj.Monthh;
+    this.date = obj.Datee;
+    this.hours = obj.Hourss;
+    this.minutes = obj.Minutess;
+    this.latitude = obj.Latitude;
+    this.longitude = obj.Longitude;
+    this.timezone = obj.Timezone;
   }
 
   getCurrentLocation(): void {
@@ -234,6 +267,7 @@ export class InfoComponent implements OnInit {
     let jsonData = {
       insertType: 'user',
       mobile: this.mobile,
+      name: this.name,
       year: Number(this.year),
       month: Number(this.month),
       date: Number(this.date),
@@ -249,6 +283,7 @@ export class InfoComponent implements OnInit {
       (results)=>{
         if(results.code == 200){
           // alert(results.message);
+          this.getUser();
         }
         else{
 
@@ -262,6 +297,10 @@ export class InfoComponent implements OnInit {
   }
   activeMatLabIndex: any = 0;
   submit(){
+    if(this.name == ""){
+      this.openSnackBar("Please enter name");
+      return;
+    }
     this.submitDetails();
     this.getPlanetAndExtended();
     this.getMahaAntardasas();
@@ -289,7 +328,7 @@ export class InfoComponent implements OnInit {
   }
 
   getPlanetAndExtended(){
-    this.getPlanets();
+    // this.getPlanets();
     this.getPlanetsExtended();
   }
 
@@ -364,6 +403,25 @@ export class InfoComponent implements OnInit {
     .subscribe(
       (results)=>{
         this.planetExtendedOutput = results.output;
+        const rawPlanets = this.planetExtendedOutput;
+        this.planetOutput = Object.keys(rawPlanets)
+        .map(key => {
+          const p = rawPlanets[key];
+          return {
+            name: p.localized_name,
+            fullDegree: p.fullDegree,
+            normDegree: p.normDegree,
+            isRetro: p.isRetro,
+            current_sign: p.current_sign,
+            house_number: p.house_number,
+            zodiac_sign_name: p.zodiac_sign_name,
+            zodiac_sign_lord: p.zodiac_sign_lord,
+            nakshatra_number: p.nakshatra_number,
+            nakshatra_name: p.nakshatra_name,
+            nakshatra_pada: p.nakshatra_pada,
+            nakshatra_vimsottari_lord: p.nakshatra_vimsottari_lord,
+          };
+        });
       },
       (error)=>{
         this.openSnackBar(error.error.message);

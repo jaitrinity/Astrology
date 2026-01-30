@@ -1,6 +1,12 @@
 .my-table th{
     font-weight: 500 !important;
 }
+.my-table thead{
+    background: aliceblue;
+}
+.my-table>:not(:first-child) {
+    border-top: 1px solid currentColor;
+}
 img{
     width: 100%;
 }

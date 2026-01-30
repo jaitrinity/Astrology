@@ -1,15 +1,25 @@
 <div class="sidebar" [class.collapsed]="isCollapsed">
-  <div class="toggle-btn" (click)="toggleSidebar()">
+  <!-- <div class="toggle-btn" (click)="toggleSidebar()">
     ☰
-  </div>
-  <nav style="height: 450px;">
-    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+  </div> -->
+  <!-- <div>
+    <button mat-button (click)="logout()" title="Logout">
+      <mat-icon>account_circle</mat-icon> {{mobile}} &nbsp;&nbsp;&nbsp;
+      <mat-icon>logout</mat-icon> 
+    </button>
+  </div> -->
+  <nav>
+    <a>
+      <button mat-button (click)="logout()" title="Logout">
+        <mat-icon>account_circle</mat-icon> {{mobile}} &nbsp;&nbsp;&nbsp;
+        <mat-icon>logout</mat-icon> 
+      </button>
+    </a>
+    <a routerLink="/dashboard" routerLinkActive="active">
+      <button mat-button><mat-icon>dashboard</mat-icon>  Dashboard</button>
+    </a>
     <!-- <a routerLink="/horoscope" routerLinkActive="active">Horoscope</a>
     <a routerLink="/profile" routerLinkActive="active">Profile</a>
     <a routerLink="/settings" routerLinkActive="active">Settings</a> -->
   </nav>
-  <nav>
-    <a (click)="logout()">Welcome : {{mobile}} Logout</a>
-  </nav>
-  
 </div>
